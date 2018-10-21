@@ -12,50 +12,47 @@ import java.util.*;
 
 
 
+
+
+
 public class Solution {
 
-    private Joiner pathJoiner = Joiner.on("/").skipNulls();
+    public class ListNode {
+        int val;
+        ListNode next;
+        ListNode(int x) { val = x; }
+    }
 
-    public int nthUglyNumber(int n) {
-        int[] uglyArray = new int[n];
-        uglyArray[0] = 1;
-        int element1 = 2,element2 = 3,element3 = 5;
-        int count1 = 1, count2=1,count3 =1;
+    /**
+     * 使用pre 和cur 来代替root和head的目的是在于返回的时候能直接得到头部节点
+     * @param head
+     * @return
+     */
 
-        int i=1;
-        while (i<n){
+    public ListNode deleteDuplicates(ListNode head) {
+        if (head == null) return null;
+        ListNode root  = new ListNode(-1);
+        ListNode pre = root;
+        root.next = head;
+        ListNode cur = head;
 
-            int miniNum = Math.min(element1, Math.min(element2, element3));
-            if (miniNum != uglyArray[i-1]){
-                uglyArray[i] = miniNum;
-                i++;
+        while (cur != null){
+
+            while (cur.next != null && cur.next.val == cur.val){
+                cur = cur.next;
             }
-            if (miniNum == element1) {
-                element1 = uglyArray[count1++]*2;
-            }else if (miniNum == element2) {
-                element2 = uglyArray[count2++]*3;
-            }else {
-                element3 = uglyArray[count3++]*5;
+
+            if (pre.next == cur){  //不存在重复值的时候
+                pre = pre.next;
+            }else{    // 跳过重复值
+                pre.next = cur.next;
             }
+            cur = cur.next;
         }
 
 
-        return uglyArray[n-1];
+        return root.next;
 
-    }
-
-    private List<String> getParentDirAndCurrentDir(String fullPath){
-        List<String> pathList = new ArrayList<>();
-
-        List<String> str = Arrays.asList(fullPath.split("/"));
-        str = new ArrayList<>(str);
-        String currentName = str.get(str.size()-1); //当前目录的名字
-        str.remove(str.size()-1); // 去掉当前目录
-        String parentDirName = pathJoiner.join(str);
-        pathList.add(currentName);
-        pathList.add(parentDirName);
-
-        return pathList;
 
     }
 
@@ -63,11 +60,9 @@ public class Solution {
 
     public static void main(String[] args) {
 
+
         Solution solution = new Solution();
-
-
-
-        System.out.println(solution.getParentDirAndCurrentDir("root/commonFile"));
+//        System.out.println(solution.deleteDuplicates("10"));
 
     }
 }
